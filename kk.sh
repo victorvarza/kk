@@ -2,16 +2,16 @@
 CLUSTER="."
 KUBECONFIGS="${HOME}/.kube/conf.d"
 
-[[ $# > 0 ]] && CLUSTER="kubeconfig-$1"
+[[ $# > 0 ]] && CLUSTER="$1"
 
 if [ ! -d "${KUBECONFIGS}" ]; then
     echo "Conf directory is not created: ${KUBECONFIGS}. I will do that for you. Just put all your configs there after that ;)."
     mkdir "${KUBECONFIGS}"
-    return
+    exit 1
 fi
 
 # select cluster config file
-CONFIG_FILE="${KUBECONFIGS}/${CLUSTER}.yaml"
+CONFIG_FILE="${KUBECONFIGS}/${CLUSTER}"
 
 if [ ! -f "${CONFIG_FILE}" ]; then
 
@@ -24,10 +24,10 @@ if [ ! -f "${CONFIG_FILE}" ]; then
       echo "------------"
 
       echo -e "$CONFIG_FILES\n" | sed 's/.yaml//g' | sed 's/kubeconfig-//g'
-      return
+      exit 1
     else
       echo "no match found for $CLUSTER" | sed 's/kubeconfig-//g'
-      return
+      exit 1
     fi
 fi
 
